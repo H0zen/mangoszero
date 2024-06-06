@@ -31,12 +31,10 @@ set(CMAKE_CXX_STANDARD          17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS        OFF)
 
-set(CMAKE_C_STANDARD          11)
+set(CMAKE_C_STANDARD          17)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
-set_property(GLOBAL
-    PROPERTY USE_FOLDERS ON
-)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 #==================================================================================
 # Define available cmake options below
@@ -79,40 +77,47 @@ message("")
 
 project(MaNGOS VERSION 0.22.0)
 
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "Default install directory" FORCE)
-endif()
-
 if(DEBUG)
   set(CMAKE_BUILD_TYPE Debug)
 else()
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-if(UNIX)
-    set(BIN_DIR ${CMAKE_INSTALL_PREFIX}/bin)
-    if (NOT CONF_INSTALL_DIR)
-        set(CONF_INSTALL_DIR ../etc)
-    endif()
-else()
-    set(BIN_DIR ${CMAKE_INSTALL_PREFIX})
-    if (NOT CONF_INSTALL_DIR)
-        set(CONF_INSTALL_DIR .)
-    endif()
+include(GNUInstallDirs)
+
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/install CACHE PATH "Default install directory" FORCE)
+endif()
+
+
+file(RELATIVE_PATH CONF_RELATIVE_INSTALL_PATH
+    ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
+    ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_SYSCONFDIR}
+)
+
+set(BIN_DIR             ${CMAKE_INSTALL_BINDIR})
+set(CONF_INSTALL_DIR    ${CMAKE_INSTALL_SYSCONFDIR})
+
+if(NOT WIN32)
+  file(RELATIVE_PATH relativeRpath
+    ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}
+    ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_INSTALL_LIBDIR}
+  )
+  set(CMAKE_INSTALL_RPATH $ORIGIN $ORIGIN/${relativeRpath})
 endif()
 
 if(NOT WITHOUT_GIT)
   find_package(Git)
 endif()
 
-find_package(Threads REQUIRED)
-find_package(MySQL   REQUIRED)
-find_package(DL      REQUIRED)
+find_package(Threads  REQUIRED)
+find_package(MySQL    REQUIRED)
+find_package(DL       REQUIRED)
+find_package(Readline REQUIRED)
+find_package(OpenSSL  REQUIRED)
 
 find_package(ZLIB  QUIET)
 find_package(BZip2 QUIET)
-
-find_package(OpenSSL REQUIRED)
 
 include(${CMAKE_SOURCE_DIR}/cmake/GenRevision.cmake)
 include(${CMAKE_SOURCE_DIR}/cmake/EnsureVersion.cmake)

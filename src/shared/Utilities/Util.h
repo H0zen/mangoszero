@@ -81,7 +81,6 @@ void stripLineInvisibleChars(std::string& src);
 
 struct tm* localtime_r(const time_t* time, struct tm* result);
 
-time_t LocalTimeToUTCTime(time_t time);
 time_t GetLocalHourTimestamp(time_t time, uint8 hour, bool onlyAfterTime = true);
 tm TimeBreakdown(time_t t);
 

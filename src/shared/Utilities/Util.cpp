@@ -185,22 +185,6 @@ tm TimeBreakdown(time_t time)
 }
 
 /**
- * Convert local time to UTC time.
- *
- * @param time The time to convert.
- *
- * @return The time in UTC.
- */
-time_t LocalTimeToUTCTime(time_t time)
-{
-    #if (defined(WIN32) || defined(_WIN32) || defined(__WIN32__))
-        return time + _timezone;
-    #else
-        return time + timezone;
-    #endif
-}
-
-/**
  * "Get the timestamp of the next time the given hour occurs in the local timezone."
  *
  * The function takes a timestamp, an hour, and a boolean. The timestamp is the time you want to find

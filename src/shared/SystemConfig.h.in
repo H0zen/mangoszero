@@ -55,7 +55,7 @@
 # define MANGOS_ENDIAN_STRING "little-endian"
 #endif
 
-#define SYSCONFDIR "@CONF_INSTALL_DIR@/"
+#define SYSCONFDIR "@CONF_RELATIVE_INSTALL_PATH@/"
 
 #define REALMD_CONFIG_NAME             "realmd.conf"
 #define MANGOSD_CONFIG_NAME            "mangosd.conf"
